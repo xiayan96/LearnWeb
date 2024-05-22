@@ -17,5 +17,8 @@ namespace LearnWeb.Entites.RequestFeatures
             set => _pageSize = value > maxPageSize ? maxPageSize : value;
         }
 
+        public string orderBy { get; set; }
+
+        public string? Fields { get; set; }
     }
 }

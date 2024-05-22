@@ -1,6 +1,7 @@
 ﻿using LearnWeb.Entites;
 using LearnWeb.Entites.ReponseType;
 using LearnWeb.Entites.RequestFeatures;
+using LearnWeb.EntityFramework.Repositories.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Sample.GameManagement.Contracts;
 using System;
@@ -19,7 +20,10 @@ namespace LearnWeb.EntityFramework.Repositories
 
         public PagedList<Player> GetPlayers(PlayerParameter parameter)
         {
-            return  FindAll().OrderBy(x => x.DateCreated)
+            return FindByCondition(player => player.DateCreated.Date >= parameter.MinDateCreated.Date && 
+                                             player.DateCreated.Date <= parameter.MaxDateCreated.Date)
+                .SearchByAccount(parameter.Account)
+                .OrderBy(x => x.DateCreated.Date)
                 .ToPagedList(parameter.PageNumber,parameter.PageSize);
                
         }

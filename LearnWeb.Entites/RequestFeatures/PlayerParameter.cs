@@ -8,5 +8,18 @@ namespace LearnWeb.Entites.RequestFeatures
 {
     public class PlayerParameter : QueryStringParameters
     {
+        public PlayerParameter()
+        {
+            orderBy = "account";
+        }
+
+        public DateTime MinDateCreated { get; set; }
+        public DateTime MaxDateCreated { get; set; } = DateTime.Now;
+
+        public bool ValidDateCreatedRange => MinDateCreated < MaxDateCreated;
+
+        public string? Account {  get; set; }
+
+
     }
 }

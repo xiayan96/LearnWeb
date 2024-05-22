@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using LearnWeb.Entites;
 using LearnWeb.Entites.Dtos;
+using LearnWeb.Entites.ReponseType.DataShaping;
 using LearnWeb.Entites.RequestFeatures;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -27,13 +28,18 @@ namespace LearnWeb.Controllers
         [HttpGet]
         public IActionResult GetPlayers([FromQuery] PlayerParameter parameter) 
         {
+            if (!parameter.ValidDateCreatedRange)
+            {
+                return BadRequest("开始日期不能大于结束日期！");
+            }
+
             try
             {
                 var players =  _repository.Player.GetPlayers(parameter);
 
                 Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(players.MetaData));
 
-                var results =_mapper.Map<IEnumerable<PlayerDto>>(players);
+                var results =_mapper.Map<IEnumerable<PlayerDto>>(players).ShapeData(parameter.Fields);
                 return Ok(results);
             }catch (Exception ex)
             {
